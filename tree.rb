@@ -7,12 +7,8 @@ class Tree
   end
 
   def build_tree(tree_array)
-    size = tree_array.size
-    return Node.new(tree_array[size - 1]) if size <= 1              # create leaf node
-
-    mid = size / 2
-
-    Node.new(tree_array[mid], build_tree(tree_array[0...mid]), build_tree(tree_array[mid + 1..]))
+    sorted_array = tree_array.uniq.sort
+    populate_tree(sorted_array)
   end
 
   def pretty_print(node = @root, prefix = '', is_left = true)
@@ -20,6 +16,17 @@ class Tree
     pretty_print(node.child_right, "#{prefix}#{is_left ? '│   ' : '    '}", false) if node.child_right
     puts "#{prefix}#{is_left ? '└── ' : '┌── '}#{node.value}"
     pretty_print(node.child_left, "#{prefix}#{is_left ? '    ' : '│   '}", true) if node.child_left
+  end
+
+  private 
+
+  def populate_tree(sorted_array)
+    size = sorted_array.size
+    return Node.new(sorted_array[size - 1]) if size <= 1              # create leaf node
+
+    mid = size / 2
+
+    Node.new(sorted_array[mid], populate_tree(sorted_array[0...mid]), populate_tree(sorted_array[mid + 1..])) 
   end
 end
 
