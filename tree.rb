@@ -18,19 +18,35 @@ class Tree
     pretty_print(node.child_left, "#{prefix}#{is_left ? '    ' : '│   '}", true) if node.child_left
   end
 
-  private 
+  def insert(value, present_node = root)
+    return present_node.value = value if present_node.value.nil? # if tree is empty
+    return if value == present_node.value # value already in tree do nothing
+
+    if value >= present_node.value
+      return present_node.child_right = Node.new(value) if present_node.child_right.nil?
+
+      insert(value, present_node.child_right)
+    else
+      return present_node.child_right = Node.new(value) if present_node.child_left.nil?
+
+      insert(value, present_node.child_left)
+    end
+  end
+
+  private
 
   def populate_tree(sorted_array)
     size = sorted_array.size
-    return Node.new(sorted_array[size - 1]) if size <= 1              # create leaf node
+    return Node.new(sorted_array[size - 1]) if size <= 1 # create leaf node
 
     mid = size / 2
 
-    Node.new(sorted_array[mid], populate_tree(sorted_array[0...mid]), populate_tree(sorted_array[mid + 1..])) 
+    Node.new(sorted_array[mid], populate_tree(sorted_array[0...mid]), populate_tree(sorted_array[mid + 1..]))
   end
 end
 
-tree = Tree.new([1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324])
-
+tree = Tree.new([1, 2, 3, 4, 5, 6, 7, 8, 9, 132_124])
+tree.pretty_print
+tree.insert(3_213_124_124_312_312)
 p tree
 tree.pretty_print
