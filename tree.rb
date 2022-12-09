@@ -43,6 +43,17 @@ class Tree
     node
   end
 
+  def find(value, node = root)
+    return if node.nil?
+    return node if node.value == value
+
+    if value > node.value
+      find(value, node.child_right)
+    else
+      find(value, node.child_left)
+    end
+  end
+
   private
 
   def delete_with_child(_value, node)
@@ -69,5 +80,5 @@ end
 
 tree = Tree.new([1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324])
 tree.pretty_print
-tree.delete(8)
+p tree.find(3)
 tree.pretty_print
