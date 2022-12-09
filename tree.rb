@@ -18,29 +18,39 @@ class Tree
     pretty_print(node.child_left, "#{prefix}#{is_left ? '    ' : '│   '}", true) if node.child_left
   end
 
-  #   def insert(value, present_node = root)
-  #     return present_node.value = value if present_node.value.nil? # if tree is empty
-  #     return if value == present_node.value # value already in tree do nothing
-
-  #     if value >= present_node.value
-  #       return present_node.child_right = Node.new(value) if present_node.child_right.nil?
-
-  #       insert(value, present_node.child_right)
-  #     else
-  #       return present_node.child_right = Node.new(value) if present_node.child_left.nil?
-
-  #       insert(value, present_node.child_left)
-  #     end
-  #   end
-
-
   def insert(value, node = root)
     return Node.new(value) if node.nil? || node.value.nil?
-    
+    return node if value == node.value
+
     if value < node.value
       node.child_left = insert(value, node.child_left)
     else
       node.child_right = insert(value, node.child_right)
+    end
+    node
+  end
+
+  def delete(value, node = root)
+    return node if node.nil?
+
+    if value < node.value
+      node.child_left = delete(value, node.child_left)
+    elsif value > node.value
+      node.child_right = delete(value, node.child_right)
+    elsif node.child_left.nil? && node.child_right.nil?
+      # we found the value
+      return nil
+    elsif node.child_left.nil?
+      return node.child_right
+    elsif node.child_right.nil?
+      return node.child_left
+    else
+      smalest_next_value = node.child_right
+      smalest_next_value = smalest_next_value.child_left until smalest_next_value.child_left.nil?
+      delete(smalest_next_value.value)
+      node.value = smalest_next_value.value
+
+      return node
     end
     node
   end
@@ -59,6 +69,5 @@ end
 
 tree = Tree.new([1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324])
 tree.pretty_print
-tree.insert(67)
-p tree
+tree.delete(8)
 tree.pretty_print
