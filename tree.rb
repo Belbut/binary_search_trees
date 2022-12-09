@@ -37,25 +37,25 @@ class Tree
       node.child_left = delete(value, node.child_left)
     elsif value > node.value
       node.child_right = delete(value, node.child_right)
-    elsif node.child_left.nil? && node.child_right.nil?
-      # we found the value
-      return nil
-    elsif node.child_left.nil?
-      return node.child_right
-    elsif node.child_right.nil?
-      return node.child_left
     else
-      smalest_next_value = node.child_right
-      smalest_next_value = smalest_next_value.child_left until smalest_next_value.child_left.nil?
-      delete(smalest_next_value.value)
-      node.value = smalest_next_value.value
-
-      return node
+      delete_with_child(value, node)
     end
     node
   end
 
   private
+
+  def delete_with_child(_value, node)
+    return if node.child_left.nil? && node.child_right.nil?
+    return node.child_right if node.child_left.nil?
+    return node.child_left if node.child_right.nil?
+
+    smalest_next_value = node.child_right
+    smalest_next_value = smalest_next_value.child_left until smalest_next_value.child_left.nil?
+    delete(smalest_next_value.value)
+    node.value = smalest_next_value.value
+    node
+  end
 
   def populate_tree(sorted_array)
     size = sorted_array.size
