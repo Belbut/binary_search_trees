@@ -130,8 +130,8 @@ class Tree
   #   end
 
   def depth(goal_node, node = root)
+    return -1 if node.nil? || goal_node.nil?
     return 1 if node == goal_node
-    return -1 if node.nil?
 
     left = depth(goal_node, node.child_left)
     right = depth(goal_node, node.child_right)
@@ -166,4 +166,4 @@ end
 tree = Tree.new(%w[A B C D E F G])
 tree.pretty_print
 
-p tree.depth(tree.find('D'))
+p tree.depth(tree.find('F'))
