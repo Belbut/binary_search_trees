@@ -82,6 +82,33 @@ class Tree
     result
   end
 
+  def preorder(result = [], node = root, &block)
+    return if node.nil?
+
+    result.append((yield(node.value))) unless node.value.nil?
+    preorder(result, node.child_left, &block)
+    preorder(result, node.child_right, &block)
+    result
+  end
+
+  def inorder(result = [], node = root, &block)
+    return if node.nil?
+
+    inorder(result, node.child_left, &block)
+    result.append((yield(node.value))) unless node.value.nil?
+    inorder(result, node.child_right, &block)
+    result
+  end
+
+  def postorder(result = [], node = root, &block)
+    return if node.nil?
+
+    postorder(result, node.child_left, &block)
+    postorder(result, node.child_right, &block)
+    result.append((yield(node.value))) unless node.value.nil?
+    result
+  end
+
   private
 
   def delete_with_child(_value, node)
@@ -106,8 +133,10 @@ class Tree
   end
 end
 
-tree = Tree.new([1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324])
+tree = Tree.new(%w[A B C D E F G])
 tree.pretty_print
-p tree.find(3)
-tree.pretty_print
-p(tree.level_order { |element| element * 2 })
+p(tree.preorder { |element| element * 2 })
+p(tree.inorder { |element| element * 2 })
+p(tree.postorder { |element| element * 2 })
+
+
