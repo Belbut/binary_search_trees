@@ -110,12 +110,33 @@ class Tree
   end
 
   def height(node)
+    # base conditon, needed to break out of recursion
+    # It will break out from the base condition on every leaf, because it will find -1 / -1
     return -1 if node.nil?
 
+    # Height from each side of the tree
+    # it will traverse all nodes from the tree once
+    # so it will make sure the furdest leaf is couth
     left_height = height(node.child_left)
     right_height = height(node.child_right)
 
+    # On every leaf it will find -1/-1 returning 0
+    # and that way the counter will start from the ground up finding (-1/0) ( -1/1)...
     [left_height, right_height].max + 1
+  end
+
+  #   def depth(node)
+  #     height(root) - height(node)
+  #   end
+
+  def depth(goal_node, node = root)
+    return 1 if node == goal_node
+    return -1 if node.nil?
+
+    left = depth(goal_node, node.child_left)
+    right = depth(goal_node, node.child_right)
+
+    [left, right].max + 1
   end
 
   private
@@ -145,4 +166,4 @@ end
 tree = Tree.new(%w[A B C D E F G])
 tree.pretty_print
 
-p tree.height(tree.find("z"))
+p tree.depth(tree.find('D'))
