@@ -109,6 +109,15 @@ class Tree
     result
   end
 
+  def height(node)
+    return -1 if node.nil?
+
+    left_height = height(node.child_left)
+    right_height = height(node.child_right)
+
+    [left_height, right_height].max + 1
+  end
+
   private
 
   def delete_with_child(_value, node)
@@ -135,8 +144,5 @@ end
 
 tree = Tree.new(%w[A B C D E F G])
 tree.pretty_print
-p(tree.preorder { |element| element * 2 })
-p(tree.inorder { |element| element * 2 })
-p(tree.postorder { |element| element * 2 })
 
-
+p tree.height(tree.find("z"))
