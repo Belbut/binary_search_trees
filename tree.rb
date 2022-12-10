@@ -54,6 +54,34 @@ class Tree
     end
   end
 
+  #   # level order using iteration
+  #   def level_order
+  #     return if root.nil?
+
+  #     queue = [root]
+  #     result = []
+  #     while queue.size.positive?
+  #       node = queue.shift
+  #       result.append(yield(node.value)) unless node.value.nil?
+  #       queue.append(node.child_left) unless node.child_left.nil?
+  #       queue.append(node.child_right) unless node.child_right.nil?
+  #     end
+  #     result
+  #   end
+
+  # level_order using recursion
+  def level_order(result = [], queue = [root], &block)
+    return if queue.size.zero?
+
+    node = queue.shift
+    result.append(yield(node.value)) unless node.value.nil?
+    queue.append(node.child_left) unless node.child_left.nil?
+    queue.append(node.child_right) unless node.child_right.nil?
+
+    level_order(result, queue, &block)
+    result
+  end
+
   private
 
   def delete_with_child(_value, node)
@@ -82,3 +110,4 @@ tree = Tree.new([1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324])
 tree.pretty_print
 p tree.find(3)
 tree.pretty_print
+p(tree.level_order { |element| element * 2 })
