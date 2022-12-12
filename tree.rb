@@ -112,7 +112,7 @@ class Tree
   def height(node)
     # base conditon, needed to break out of recursion
     # It will break out from the base condition on every leaf, because it will find -1 / -1
-    return -1 if node.nil?
+    return 0 if node.nil?
 
     # Height from each side of the tree
     # it will traverse all nodes from the tree once
@@ -139,7 +139,18 @@ class Tree
     [left, right].max + 1
   end
 
+  def balanced?
+    node_balanced?
+  end
+
   private
+
+  def node_balanced?(node = root)
+    return true if node.nil?
+    return false if (height(node.child_left) - height(node.child_right)).abs > 1
+
+    node_balanced?(node.child_left) && node_balanced?(node.child_right)
+  end
 
   def delete_with_child(_value, node)
     return if node.child_left.nil? && node.child_right.nil?
@@ -163,7 +174,18 @@ class Tree
   end
 end
 
-tree = Tree.new(%w[A B C D E F G])
+tree = Tree.new(%w[A B C D E F G ac dsa])
+tree.pretty_print
+p tree.balanced?
+p " --------------- "
+# unbalanced_tree
+unbalanced_tree = tree.clone
+unbalanced_tree.root.child_right = nil
+
+unbalanced_tree.pretty_print
 tree.pretty_print
 
-p tree.depth(tree.find('F'))
+p tree.balanced?
+p unbalanced_tree.balanced?
+
+
