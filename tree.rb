@@ -180,15 +180,28 @@ class Tree
   end
 end
 
-tree = Tree.new(%w[A B C D E F G ac dsa])
-tree.pretty_print
-p tree.balanced?
-p ' --------------- '
-# unbalanced_tree
-unbalanced_tree = tree.clone
-unbalanced_tree.root.child_right = nil
+# Driver Script to test all functions
+test_tree = Tree.new(Array.new(15) { rand(1..100) })
+test_tree.pretty_print
+puts "Confirm that the tree is balanced: #{test_tree.balanced?} == true?\n"
+puts 'Print all elements in:'
+puts "    Level order:#{test_tree.level_order}"
+puts "    Pre order:#{test_tree.preorder}"
+puts "    In order:#{test_tree.inorder}"
+puts "    Post order:#{test_tree.postorder}\n\n"
 
-unbalanced_tree.pretty_print
+insert_values = Array.new(5){rand(100..1000)}
+puts "Insert elements to unbalance the tree #{insert_values}"
+insert_values.each { |element| test_tree.insert(element) }
+test_tree.pretty_print
+puts "Confirm that the tree is balanced: #{test_tree.balanced?} == false? \n"
+puts "Rebalance the tree again"
+test_tree.rebalance!
+test_tree.pretty_print
+puts "Confirm that the tree is balanced: #{test_tree.balanced?} == true? \n"
+puts 'Print all elements in:'
+puts "    Level order:#{test_tree.level_order}"
+puts "    Pre order:#{test_tree.preorder}"
+puts "    In order:#{test_tree.inorder}"
+puts "    Post order:#{test_tree.postorder}\n\n"
 
-p neer = unbalanced_tree.rebalance
-neer.pretty_print
