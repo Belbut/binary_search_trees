@@ -57,12 +57,11 @@ class Tree
   #   # level order using iteration
   #   def level_order
   #     return if root.nil?
-
   #     queue = [root]
   #     result = []
   #     while queue.size.positive?
   #       node = queue.shift
-  #       result.append(yield(node.value)) unless node.value.nil?
+  #       result.append(block_given? ? yield(node.value) : node.value) unless node.value.nil?
   #       queue.append(node.child_left) unless node.child_left.nil?
   #       queue.append(node.child_right) unless node.child_right.nil?
   #     end
@@ -74,7 +73,7 @@ class Tree
     return if queue.size.zero?
 
     node = queue.shift
-    result.append(yield(node.value)) unless node.value.nil?
+    result.append(block_given? ? yield(node.value) : node.value) unless node.value.nil?
     queue.append(node.child_left) unless node.child_left.nil?
     queue.append(node.child_right) unless node.child_right.nil?
 
@@ -85,7 +84,7 @@ class Tree
   def preorder(result = [], node = root, &block)
     return if node.nil?
 
-    result.append((yield(node.value))) unless node.value.nil?
+    result.append(block_given? ? yield(node.value) : node.value) unless node.value.nil?
     preorder(result, node.child_left, &block)
     preorder(result, node.child_right, &block)
     result
@@ -95,7 +94,7 @@ class Tree
     return if node.nil?
 
     inorder(result, node.child_left, &block)
-    result.append((yield(node.value))) unless node.value.nil?
+    result.append(block_given? ? yield(node.value) : node.value) unless node.value.nil?
     inorder(result, node.child_right, &block)
     result
   end
@@ -105,7 +104,7 @@ class Tree
 
     postorder(result, node.child_left, &block)
     postorder(result, node.child_right, &block)
-    result.append((yield(node.value))) unless node.value.nil?
+    result.append(block_given? ? yield(node.value) : node.value) unless node.value.nil?
     result
   end
 
@@ -125,10 +124,6 @@ class Tree
     [left_height, right_height].max + 1
   end
 
-  #   def depth(node)
-  #     height(root) - height(node)
-  #   end
-
   def depth(goal_node, node = root)
     return -1 if node.nil? || goal_node.nil?
     return 1 if node == goal_node
@@ -141,6 +136,17 @@ class Tree
 
   def balanced?
     node_balanced?
+  end
+
+  def rebalance!
+    self.root = build_tree(level_order)
+    self
+  end
+
+  def rebalance
+    tree_clone = clone
+    tree_clone.root = build_tree(level_order)
+    tree_clone
   end
 
   private
@@ -177,15 +183,12 @@ end
 tree = Tree.new(%w[A B C D E F G ac dsa])
 tree.pretty_print
 p tree.balanced?
-p " --------------- "
+p ' --------------- '
 # unbalanced_tree
 unbalanced_tree = tree.clone
 unbalanced_tree.root.child_right = nil
 
 unbalanced_tree.pretty_print
-tree.pretty_print
 
-p tree.balanced?
-p unbalanced_tree.balanced?
-
-
+p neer = unbalanced_tree.rebalance
+neer.pretty_print
